@@ -27,6 +27,25 @@ To use this action in your CI/CD pipeline, add the following step after building
     script_file: 'tasks/runTests.luau'
 ```
 
+## ⚡ Setup Guide
+
+To use this action, you need to configure your Roblox experience and generate an Open Cloud API Key.
+
+1. **Create Place:** Have a target **Test Place** ready within an Experience in Roblox Studio.
+2. **Generate API Key:** Go to the [Roblox Creator Dashboard](https://create.roblox.com/docs/cloud/open-cloud/api-keys) and create a new Open Cloud API Key.
+3. **Set Permissions:** Grant the API Key the following permissions for your target Experience/Place:
+   * `universe.places:write`
+   * `universe.place.luau-execution-session:write`
+4. **Configure IP Access (Critical):** Since GitHub Actions runners use dynamic IP addresses, you **must** add `0.0.0.0/0` to the "Accepted IP Addresses" section of your API key settings.
+5. **Add Repository Secrets:** In your GitHub repository, go to *Settings -> Secrets and variables -> Actions* and add the generated API Key as a Secret named `ROBLOX_API_KEY`.
+6. **Add Repository Variables:** In the same GitHub settings menu, add your IDs as Variables:
+   * `ROBLOX_TEST_UNIVERSE_ID` *(Note: This is your Experience ID)*
+   * `ROBLOX_TEST_PLACE_ID`
+
+> **💡 Tip: How to find your IDs**
+> You can easily find both IDs in the URL of your experience on the Creator Dashboard:
+> `https://create.roblox.com/dashboard/creations/experiences/[UNIVERSE_ID]/places/[PLACE_ID]/...`
+
 ## 📥 Inputs
 
 | Input | Required | Default | Description |
