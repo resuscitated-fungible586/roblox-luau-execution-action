@@ -1,0 +1,55 @@
+name: "Roblox Luau Execution via Open Cloud"
+description: "Uploads a place file and executes a Luau test script on Roblox servers using Open Cloud API"
+
+branding:
+  icon: play-circle
+  color: blue
+
+inputs:
+  api_key:
+    description: "Roblox Open Cloud API Key"
+    required: true
+  universe_id:
+    description: "Roblox Universe ID"
+    required: true
+  place_id:
+    description: "Roblox Place ID"
+    required: true
+  place_file:
+    description: "Path to the compiled place file (e.g., dist.rbxl)"
+    required: true
+  script_file:
+    description: "Path to the Luau script file to execute (e.g., tasks/runTests.luau)"
+    required: true
+  publish:
+    description: "Set to 'true' to publish the place, 'false' just saves it."
+    required: false
+    default: "false"
+
+outputs:
+  task_status:
+    description: "Final status of the Luau execution task (COMPLETE, FAILED, etc.)"
+    value: ${{ steps.execute.outputs.task_status }}
+  task_logs:
+    description: "Logs produced by the Luau script"
+    value: ${{ steps.execute.outputs.task_logs }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Execute Luau Task
+      id: execute
+      shell: bash
+      env:
+        INPUT_API_KEY: ${{ inputs.api_key }}
+        INPUT_UNIVERSE_ID: ${{ inputs.universe_id }}
+        INPUT_PLACE_ID: ${{ inputs.place_id }}
+        INPUT_PLACE_FILE: ${{ inputs.place_file }}
+        INPUT_SCRIPT_FILE: ${{ inputs.script_file }}
+        INPUT_PUBLISH: ${{ inputs.publish }}
+      run: python ${{ github.action_path }}/main.py
